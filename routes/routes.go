@@ -6,82 +6,112 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// SetupRouter menginisialisasi semua routes API
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	// Define Routes untuk Users
-	r.GET("/users", controllers.GetAllUsers)
-	r.GET("/users/:id", controllers.GetUsersByID)
-	r.POST("/users", controllers.CreateUsers)
-	r.PUT("/users/:id", controllers.UpdateUsers)
-	r.DELETE("/users/:id", controllers.DeleteUsers)
+	// Middleware Logging
+	r.Use(gin.Logger())
 
-	// Define Routes untuk News
-	r.GET("/news", controllers.GetAllNews)
-	r.GET("/news/:id", controllers.GetNewsByID)
-	r.POST("/news", controllers.CreateNews)
-	r.PUT("/news/:id", controllers.UpdateNews)
-	r.DELETE("/news/:id", controllers.DeleteNews)
+	// Routes untuk Users
+	userRoutes := r.Group("/users")
+	{
+		userRoutes.GET("", controllers.GetAllUsers)
+		userRoutes.GET("/:id", controllers.GetUsersByID)
+		userRoutes.POST("", controllers.CreateUsers)
+		userRoutes.PUT("/:id", controllers.UpdateUsers)
+		userRoutes.DELETE("/:id", controllers.DeleteUsers)
+	}
 
-	// Define Routes untuk Informations
-	r.GET("/informations", controllers.GetAllInformations)
-	r.GET("/informations/:id", controllers.GetInformationByID)
-	r.POST("/informations", controllers.CreateInformation)
-	r.PUT("/informations/:id", controllers.UpdateInformation)
-	r.DELETE("/informations/:id", controllers.DeleteInformation)
+	// Routes untuk News
+	newsRoutes := r.Group("/news")
+	{
+		newsRoutes.GET("", controllers.GetAllNews)
+		newsRoutes.GET("/:id", controllers.GetNewsByID)
+		newsRoutes.POST("", controllers.CreateNews)
+		newsRoutes.PUT("/:id", controllers.UpdateNews)
+		newsRoutes.DELETE("/:id", controllers.DeleteNews)
+	}
 
-	// Define Routes untuk Subsidies
-r.GET("/subsidies", controllers.GetAllSubsidies)
-r.GET("/subsidies/:id", controllers.GetSubsidyByID)
-r.POST("/subsidies", controllers.CreateSubsidy)
-r.PUT("/subsidies/:id", controllers.UpdateSubsidy)
-r.DELETE("/subsidies/:id", controllers.DeleteSubsidy)
+	// Routes untuk Informations
+	infoRoutes := r.Group("/informations")
+	{
+		infoRoutes.GET("", controllers.GetAllInformations)
+		infoRoutes.GET("/:id", controllers.GetInformationByID)
+		infoRoutes.POST("", controllers.CreateInformation)
+		infoRoutes.PUT("/:id", controllers.UpdateInformation)
+		infoRoutes.DELETE("/:id", controllers.DeleteInformation)
+	}
 
-// Define Routes untuk Aspirations
-r.GET("/aspirations", controllers.GetAllAspirations)
-r.GET("/aspirations/:id", controllers.GetAspirationByID)
-r.POST("/aspirations", controllers.CreateAspiration)
-r.PUT("/aspirations/:id", controllers.UpdateAspiration)
-r.DELETE("/aspirations/:id", controllers.DeleteAspiration)
+	// Routes untuk Subsidies
+	subsidyRoutes := r.Group("/subsidies")
+	{
+		subsidyRoutes.GET("", controllers.GetAllSubsidies)
+		subsidyRoutes.GET("/:id", controllers.GetSubsidyByID)
+		subsidyRoutes.POST("", controllers.CreateSubsidy)
+		subsidyRoutes.PUT("/:id", controllers.UpdateSubsidy)
+		subsidyRoutes.DELETE("/:id", controllers.DeleteSubsidy)
+	}
 
-// Define Routes untuk Destinations
-r.GET("/destinations", controllers.GetAllDestinations)
-r.GET("/destinations/:id", controllers.GetDestinationByID)
-r.POST("/destinations", controllers.CreateDestination)
-r.PUT("/destinations/:id", controllers.UpdateDestination)
-r.DELETE("/destinations/:id", controllers.DeleteDestination)
+	// Routes untuk Aspirations
+	aspirationRoutes := r.Group("/aspirations")
+	{
+		aspirationRoutes.GET("", controllers.GetAllAspirations)
+		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
+		aspirationRoutes.POST("", controllers.CreateAspiration)
+		aspirationRoutes.PUT("/:id", controllers.UpdateAspiration)
+		aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration)
+	}
 
-// Define Routes untuk Testimonies
-r.GET("/testimonies", controllers.GetAllTestimonies)
-r.GET("/testimonies/:id", controllers.GetTestimonyByID)
-r.POST("/testimonies", controllers.CreateTestimony)
-r.PUT("/testimonies/:id", controllers.UpdateTestimony)
-r.DELETE("/testimonies/:id", controllers.DeleteTestimony)
+	// Routes untuk Destinations
+	destinationRoutes := r.Group("/destinations")
+	{
+		destinationRoutes.GET("", controllers.GetAllDestinations)
+		destinationRoutes.GET("/:id", controllers.GetDestinationByID)
+		destinationRoutes.POST("", controllers.CreateDestination)
+		destinationRoutes.PUT("/:id", controllers.UpdateDestination)
+		destinationRoutes.DELETE("/:id", controllers.DeleteDestination)
+	}
 
-// Define Routes untuk Packages
-r.GET("/packages", controllers.GetAllPackages)
-r.GET("/packages/:id", controllers.GetPackageByID)
-r.POST("/packages", controllers.CreatePackage)
-r.PUT("/packages/:id", controllers.UpdatePackage)
-r.DELETE("/packages/:id", controllers.DeletePackage)
+	// Routes untuk Testimonies
+	testimonyRoutes := r.Group("/testimonies")
+	{
+		testimonyRoutes.GET("", controllers.GetAllTestimonies)
+		testimonyRoutes.GET("/:id", controllers.GetTestimonyByID)
+		testimonyRoutes.POST("", controllers.CreateTestimony)
+		testimonyRoutes.PUT("/:id", controllers.UpdateTestimony)
+		testimonyRoutes.DELETE("/:id", controllers.DeleteTestimony)
+	}
 
-// Define Routes untuk Visitors
-r.GET("/visitors", controllers.GetAllVisitors)
-r.GET("/visitors/:id", controllers.GetVisitorByID)
-r.POST("/visitors", controllers.CreateVisitor)
-r.PUT("/visitors/:id", controllers.UpdateVisitor)
-r.DELETE("/visitors/:id", controllers.DeleteVisitor)
+	// Routes untuk Packages
+	packageRoutes := r.Group("/packages")
+	{
+		packageRoutes.GET("", controllers.GetAllPackages)
+		packageRoutes.GET("/:id", controllers.GetPackageByID)
+		packageRoutes.POST("", controllers.CreatePackage)
+		packageRoutes.PUT("/:id", controllers.UpdatePackage)
+		packageRoutes.DELETE("/:id", controllers.DeletePackage)
+	}
 
-// Define Routes untuk Orders
-r.GET("/orders", controllers.GetAllOrders)
-r.GET("/orders/:id", controllers.GetOrderByID)
-r.POST("/orders", controllers.CreateOrder)
-r.PUT("/orders/:id", controllers.UpdateOrder)
-r.DELETE("/orders/:id", controllers.DeleteOrder)
+	// Routes untuk Visitors
+	visitorRoutes := r.Group("/visitors")
+	{
+		visitorRoutes.GET("", controllers.GetAllVisitors)
+		visitorRoutes.GET("/:id", controllers.GetVisitorByID)
+		visitorRoutes.POST("", controllers.CreateVisitor)
+		visitorRoutes.PUT("/:id", controllers.UpdateVisitor)
+		visitorRoutes.DELETE("/:id", controllers.DeleteVisitor)
+	}
 
-
-
-
+	// Routes untuk Orders
+	orderRoutes := r.Group("/orders")
+	{
+		orderRoutes.GET("", controllers.GetAllOrders)
+		orderRoutes.GET("/:id", controllers.GetOrderByID)
+		orderRoutes.POST("", controllers.CreateOrder)
+		orderRoutes.PUT("/:id", controllers.UpdateOrder)
+		orderRoutes.DELETE("/:id", controllers.DeleteOrder)
+	}
 
 	return r
 }
