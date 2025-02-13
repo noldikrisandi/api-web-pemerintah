@@ -14,15 +14,15 @@ var err error
 
 // SetupDatabase initializes the database connection
 func SetupDatabase() {
-	// Setup koneksi ke PostgreSQL
-	dsn := "user=postgres password=noldi dbname=webpemerintah sslmode=disable"
+	// Setup koneksi ke PostgreSQL di Railway
+	dsn := "postgres://postgres:wsKcDFfPnBqqEwfLhyERIlYGNIjmRJse@junction.proxy.rlwy.net:22215/railway?sslmode=disable"
 	DB, err = gorm.Open("postgres", dsn)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	fmt.Println("Database connected successfully!")
 
-	// Migrate model: pastikan tabel News dan Informasi ada di database
+	// Migrate model: pastikan tabel-tabel ada di database
 	fmt.Println("Running database migration...")
 	DB.AutoMigrate(&models.Users{}, &models.Informations{}, &models.News{}, &models.Subsidies{}, &models.Aspirations{}, &models.Destinations{}, &models.Testimonies{}, &models.Packages{}, &models.Visitors{}, &models.Orders{})
 	fmt.Println("Migration done.")
