@@ -24,6 +24,6 @@ func SetupDatabase() {
 
 	// Migrate model: pastikan tabel-tabel ada di database
 	fmt.Println("Running database migration...")
-	DB.AutoMigrate(&models.Users{}, &models.Informations{}, &models.News{}, &models.Subsidies{}, &models.Aspirations{}, &models.Destinations{}, &models.Testimonies{}, &models.Packages{}, &models.Visitors{}, &models.Orders{})
+	DB.AutoMigrate(&models.Users{}, &models.Aspirations{})
 	fmt.Println("Migration done.")
 }
