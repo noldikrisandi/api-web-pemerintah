@@ -27,6 +27,8 @@ func SetupRouter() *gin.Engine {
 
 	// Endpoint untuk login menggunakan LoginUserController
 	r.POST("/login", controllers.LoginUserController)
+	// Rute untuk autentikasi
+	r.POST("/register", controllers.RegisterUser)
 
 	// Routes untuk Users
 	userRoutes := r.Group("/users")
