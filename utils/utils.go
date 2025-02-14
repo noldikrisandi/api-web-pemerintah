@@ -1,15 +1,13 @@
 package utils
 
 import (
-	"errors"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
-	"golang.org/x/crypto/bcrypt"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 // Secret key untuk JWT
-var jwtKey = []byte("secret_key") // Ganti dengan secret key yang lebih aman
+var jwtKey = []byte("your-secret-key") // Ganti dengan secret key yang lebih aman
 
 // Struktur payload token JWT
 type Claims struct {
@@ -37,32 +35,4 @@ func GenerateToken(userID, email string) (string, error) {
 	}
 
 	return tokenString, nil
-}
-
-// Fungsi untuk verifikasi token JWT
-func ValidateToken(tokenString string) (*Claims, error) {
-	claims := &Claims{}
-
-	// Parse token
-	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	})
-
-	if err != nil || !token.Valid {
-		return nil, errors.New("token tidak valid")
-	}
-
-	return claims, nil
-}
-
-// Hash password menggunakan bcrypt
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(bytes), err
-}
-
-// Cek apakah password sesuai dengan hash
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
 }
