@@ -7,5 +7,5 @@ type Users struct {
 	NIK      string `json:"nik"`
 	NOKK     string `json:"nokk"`
 	WA       string `json:"wa"`
-	NAMA     string `json:"nama"`
+	Nama     string `json:"nama"`
 }
