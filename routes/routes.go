@@ -2,8 +2,8 @@ package routes
 
 import (
 	"backend/controllers"
-	// middleware "backend/middlewares"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,12 +14,19 @@ func SetupRouter() *gin.Engine {
 	// Middleware Logging
 	r.Use(gin.Logger())
 
+	// Tambahkan middleware CORS sebelum routes didefinisikan
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"}, // Sesuaikan dengan domain frontend
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
+
 	// Route untuk login (public)
 	r.POST("/login", controllers.LoginHandler)
 
 	// Routes untuk Users
 	userRoutes := r.Group("/users")
-	// userRoutes.Use(middleware.AuthMiddleware()) // Melindungi route
 	{
 		userRoutes.GET("", controllers.GetAllUsers)
 		userRoutes.GET("/:id", controllers.GetUsersByID)
@@ -28,9 +35,8 @@ func SetupRouter() *gin.Engine {
 		userRoutes.DELETE("/:id", controllers.DeleteUsers)
 	}
 
-	// Routes untuk Admin (Protected)
+	// Routes untuk Admin
 	adminRoutes := r.Group("/admins")
-	// adminRoutes.Use(middleware.AuthMiddleware()) // Melindungi route
 	{
 		adminRoutes.GET("", controllers.GetAllAdmins)
 		adminRoutes.GET("/:id", controllers.GetAdminsByID)
@@ -39,9 +45,8 @@ func SetupRouter() *gin.Engine {
 		adminRoutes.DELETE("/:id", controllers.DeleteAdmins)
 	}
 
-	// Routes untuk Aspirations (Protected)
+	// Routes untuk Aspirations
 	aspirationRoutes := r.Group("/aspirations")
-	// aspirationRoutes.Use(middleware.AuthMiddleware()) // Melindungi route
 	{
 		aspirationRoutes.GET("", controllers.GetAllAspirations)
 		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
