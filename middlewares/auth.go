@@ -18,7 +18,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Ambil token dari header Authorization
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Kamu tidak bisa mengakses api ini tanpa token"})
 			c.Abort()
 			return
 		}
