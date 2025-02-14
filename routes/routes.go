@@ -2,6 +2,7 @@ package routes
 
 import (
 	"backend/controllers"
+	"backend/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +14,10 @@ func SetupRouter() *gin.Engine {
 	// Middleware Logging
 	r.Use(gin.Logger())
 
-	// Routes untuk Users
+	// Route untuk login (public)
+	r.POST("/login", controllers.LoginHandler)
+
+	// Routes untuk Users (Public, tanpa proteksi)
 	userRoutes := r.Group("/users")
 	{
 		userRoutes.GET("", controllers.GetAllUsers)
@@ -23,8 +27,20 @@ func SetupRouter() *gin.Engine {
 		userRoutes.DELETE("/:id", controllers.DeleteUsers)
 	}
 
-	// Routes untuk Aspirations
+	// Routes untuk Admin (Protected)
+	adminRoutes := r.Group("/admins")
+	adminRoutes.Use(middlewares.AuthMiddleware()) // Melindungi route
+	{
+		adminRoutes.GET("", controllers.GetAllAdmins)
+		adminRoutes.GET("/:id", controllers.GetAdminsByID)
+		adminRoutes.POST("", controllers.CreateAdmins)
+		adminRoutes.PUT("/:id", controllers.UpdateAdmins)
+		adminRoutes.DELETE("/:id", controllers.DeleteAdmins)
+	}
+
+	// Routes untuk Aspirations (Protected)
 	aspirationRoutes := r.Group("/aspirations")
+	aspirationRoutes.Use(middlewares.AuthMiddleware()) // Melindungi route
 	{
 		aspirationRoutes.GET("", controllers.GetAllAspirations)
 		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
