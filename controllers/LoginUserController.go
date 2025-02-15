@@ -36,7 +36,9 @@ func LoginUserController(c *gin.Context) {
 	}
 
 	// Jika password benar, buat token JWT
-	token, err := utils.GenerateToken(user.ID, user.Email)
+	// Jika password benar, buat token JWT
+	token, err := utils.GenerateToken(user.ID, user.Email, false) // False untuk user (bukan admin)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal membuat token"})
 		return

@@ -11,23 +11,24 @@ var jwtKey = []byte("your-secret-key") // Ganti dengan secret key yang lebih ama
 
 // Struktur payload token JWT
 type Claims struct {
-	UserID string `json:"user_id"`
-	Email  string `json:"email"`
+	UserID  string `json:"user_id"`
+	Email   string `json:"email"`
+	IsAdmin bool   `json:"is_admin"` // Menambahkan status admin
 	jwt.StandardClaims
 }
 
 // Fungsi untuk membuat token JWT
-func GenerateToken(userID, email string) (string, error) {
-	expirationTime := time.Now().Add(24 * time.Hour) // Token berlaku 24 jam
+func GenerateToken(userID, email string, isAdmin bool) (string, error) {
+	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
-		UserID: userID,
-		Email:  email,
+		UserID:  userID,
+		Email:   email,
+		IsAdmin: isAdmin, // Menyertakan status admin
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expirationTime.Unix(),
 		},
 	}
 
-	// Buat token JWT
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
