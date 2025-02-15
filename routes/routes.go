@@ -11,23 +11,21 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	// Middleware Logging
-	r.Use(gin.Logger())
+	// Middleware Logging dan Recovery
+	r.Use(gin.Logger(), gin.Recovery())
 
-	// Tambahkan middleware CORS sebelum routes didefinisikan
+	// Middleware CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"}, // Sesuaikan dengan domain frontend
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+		AllowOrigins:     []string{"http://localhost:5173"},                   // Sesuaikan dengan domain frontend
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}, // Tambahkan OPTIONS
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
 
-	// Route untuk login (public)
-	// r.POST("/login", controllers.LoginHandler)
-
 	// Endpoint untuk login menggunakan LoginUserController
 	r.POST("/login", controllers.LoginUserController)
-	// Rute untuk autentikasi
+
+	// Rute untuk register user
 	r.POST("/register", controllers.RegisterUser)
 
 	// Routes untuk Users
@@ -55,7 +53,7 @@ func SetupRouter() *gin.Engine {
 	{
 		aspirationRoutes.GET("", controllers.GetAllAspirations)
 		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
-		aspirationRoutes.POST("", controllers.CreateAspiration)
+		aspirationRoutes.POST("", controllers.CreateAspiration) // Hapus trailing slash
 		aspirationRoutes.PUT("/:id", controllers.UpdateAspiration)
 		aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration)
 	}

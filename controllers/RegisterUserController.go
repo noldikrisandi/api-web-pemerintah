@@ -12,6 +12,7 @@ import (
 func RegisterUser(c *gin.Context) {
 	var user models.Users
 
+	// Bind JSON body to struct
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Format JSON tidak valid", "details": err.Error()})
 		return

@@ -1,11 +1,18 @@
 package models
 
+import "time"
+
 type Aspirations struct {
-	ID           string `json:"id" gorm:"primary_key"`
-	NIK          string `json:"nik"`
-	JenisBantuan string `json:"jenis_bantuan"`
-	Keterangan   string `json:"keterangan"`
-	LinkGambar   string `json:"link_gambar"`
-	LinkProposal string `json:"link_proposal"`
-	Status       string `json:"status" gorm:"default:Pending"`
+	ID               string    `gorm:"primaryKey" json:"id"`
+	Jenis            string    `json:"jenis"`
+	Kecamatan        string    `json:"kecamatan"`
+	Desa             string    `json:"Desa"`
+	Keterangan       string    `json:"keterangan"`
+	UrlFoto          string    `gorm:"column:url_foto" json:"url_foto"`         // Sesuaikan nama kolom di DB
+	UrlProposal      string    `gorm:"column:url_proposal" json:"url_proposal"` // Sesuaikan nama kolom di DB
+	Status           string    `json:"status"`
+	KeteranganStatus string    `json:"keterangan_status"`
+	IdPengirim       string    `json:"id_pengirim"`
+	CreatedAt        time.Time `json:"created_at"`
+	UpdatedAt        time.Time `json:"updated_at"`
 }
