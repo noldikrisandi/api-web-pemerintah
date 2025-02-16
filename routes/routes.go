@@ -53,7 +53,8 @@ func SetupRouter() *gin.Engine {
 	{
 		aspirationRoutes.GET("", controllers.GetAllAspirations)
 		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
-		aspirationRoutes.POST("", controllers.CreateAspiration) // Hapus trailing slash
+		aspirationRoutes.GET("/user/:user_id", controllers.GetAspirationsByUserID) // Tambahkan ini
+		aspirationRoutes.POST("", controllers.CreateAspiration)
 		aspirationRoutes.PUT("/:id", controllers.UpdateAspiration)
 		aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration)
 	}

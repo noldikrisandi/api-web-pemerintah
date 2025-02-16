@@ -96,3 +96,16 @@ func DeleteAspiration(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Aspirasi berhasil dihapus"})
 }
+
+// Get aspirations by user ID
+func GetAspirationsByUserID(c *gin.Context) {
+	userID := c.Param("user_id") // Ambil user_id dari parameter URL
+
+	var aspirations []models.Aspirations
+	if err := database.DB.Where("id_pengirim = ?", userID).Find(&aspirations).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data aspirasi", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Data aspirasi pengguna ditemukan", "data": aspirations})
+}
