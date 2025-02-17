@@ -14,7 +14,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// Secret key untuk JWT dari environment variable
 var secretKey []byte
 
 func init() {
@@ -24,13 +23,11 @@ func init() {
 	}
 }
 
-// Struct untuk request login
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
-// LoginHandler untuk menangani autentikasi dari database
 func LoginHandler(c *gin.Context) {
 	var req LoginRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -50,13 +47,11 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	// Validasi password dengan bcrypt
 	if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(req.Password)); err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Password salah"})
 		return
 	}
 
-	// Generate token JWT dengan user ID dan email
 	claims := jwt.MapClaims{
 		"id":    admin.ID,
 		"email": admin.Email,

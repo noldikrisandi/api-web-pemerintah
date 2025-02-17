@@ -7,25 +7,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SetupRouter menginisialisasi semua routes API
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
-	// Middleware Logging dan Recovery
 	r.Use(gin.Logger(), gin.Recovery())
 
-	// Middleware CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},                   // Sesuaikan dengan domain frontend
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}, // Tambahkan OPTIONS
+		AllowOrigins:     []string{"http://localhost:5173"}, // untuk ases frontend
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
 	}))
 
-	// Endpoint untuk login menggunakan LoginUserController
 	r.POST("/login", controllers.LoginUserController)
 
-	// Rute untuk register user
 	r.POST("/register", controllers.RegisterUser)
 
 	// Routes untuk Users
@@ -35,7 +30,7 @@ func SetupRouter() *gin.Engine {
 		userRoutes.GET("/:id", controllers.GetUsersByID)
 		userRoutes.POST("", controllers.CreateUsers)
 		userRoutes.PUT("/:id", controllers.UpdateUsers)
-		userRoutes.DELETE("/:id", controllers.DeleteUsers)
+		// userRoutes.DELETE("/:id", controllers.DeleteUsers) saya tidak beri akses hapus
 	}
 
 	// Routes untuk Admin
@@ -45,7 +40,7 @@ func SetupRouter() *gin.Engine {
 		adminRoutes.GET("/:id", controllers.GetAdminsByID)
 		adminRoutes.POST("", controllers.CreateAdmins)
 		adminRoutes.PUT("/:id", controllers.UpdateAdmins)
-		adminRoutes.DELETE("/:id", controllers.DeleteAdmins)
+		// adminRoutes.DELETE("/:id", controllers.DeleteAdmins) saya tidak beri akses hapus
 		adminRoutes.POST("/login", controllers.LoginAdminController)
 	}
 
@@ -53,16 +48,12 @@ func SetupRouter() *gin.Engine {
 	aspirationRoutes := r.Group("/aspirations")
 	{
 
-		// aspirationRoutes.POST("", controllers.CreateAspiration)
-		aspirationRoutes.POST("", controllers.CreateAspiration2)
+		aspirationRoutes.POST("", controllers.CreateAspiration)
 		aspirationRoutes.GET("", controllers.GetAllAspirations)
 		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
 		aspirationRoutes.GET("/user/:user_id", controllers.GetAspirationsByUserID)
-		// aspirationRoutes.GET("/count/:id_pengirim", controllers.GetAspirationsCountByUserID)
 		aspirationRoutes.PUT("/:id", controllers.UpdateAspiration)
-		aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration)
-		// aspirationRoutes.GET("/user/:user_id/week", controllers.GetAspirationsCountByUserIDLast7Days)
-		// aspirationRoutes.GET("/user/:user_id/week", controllers.CreateAspiration2)
+		// aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration) saya tidak beri akses hapus
 
 	}
 

@@ -12,9 +12,8 @@ import (
 var DB *gorm.DB
 var err error
 
-// SetupDatabase initializes the database connection
 func SetupDatabase() {
-	// Setup koneksi ke PostgreSQL di Railway
+	// koneksi ke PostgreSQL di Railway
 	dsn := "postgres://postgres:wsKcDFfPnBqqEwfLhyERIlYGNIjmRJse@junction.proxy.rlwy.net:22215/railway?sslmode=disable"
 	DB, err = gorm.Open("postgres", dsn)
 	if err != nil {
@@ -22,7 +21,6 @@ func SetupDatabase() {
 	}
 	fmt.Println("Database connected successfully!")
 
-	// Migrate model: pastikan tabel-tabel ada di database
 	fmt.Println("Running database migration...")
 	DB.AutoMigrate(&models.Users{}, &models.Aspirations{}, models.Admins{})
 	fmt.Println("Migration done.")

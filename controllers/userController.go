@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Ambil semua data Users
 func GetAllUsers(c *gin.Context) {
 	var users []models.Users
 	if err := database.DB.Find(&users).Error; err != nil {
@@ -18,7 +17,6 @@ func GetAllUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-// Ambil satu user berdasarkan ID
 func GetUsersByID(c *gin.Context) {
 	id := c.Param("id")
 	var users models.Users
@@ -29,7 +27,6 @@ func GetUsersByID(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-// Buat user baru
 func CreateUsers(c *gin.Context) {
 	var users models.Users
 	if err := c.ShouldBindJSON(&users); err != nil {
@@ -37,7 +34,6 @@ func CreateUsers(c *gin.Context) {
 		return
 	}
 
-	// Validasi data
 	if users.Email == "" || users.Nama == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email dan Nama tidak boleh kosong"})
 		return
@@ -50,7 +46,6 @@ func CreateUsers(c *gin.Context) {
 	c.JSON(http.StatusCreated, users)
 }
 
-// Update user berdasarkan ID
 func UpdateUsers(c *gin.Context) {
 	id := c.Param("id")
 	var users models.Users
@@ -71,7 +66,6 @@ func UpdateUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, users)
 }
 
-// Hapus user berdasarkan ID
 func DeleteUsers(c *gin.Context) {
 	id := c.Param("id")
 	if err := database.DB.Where("id = ?", id).Delete(&models.Users{}).Error; err != nil {

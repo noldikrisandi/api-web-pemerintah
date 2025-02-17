@@ -12,7 +12,6 @@ type Aspirations struct {
 	UrlProposal      string    `gorm:"column:url_proposal" json:"url_proposal"`
 	Status           string    `json:"status"`
 	KeteranganStatus string    `json:"keterangan_status"`
-	IdPengirim       string    `gorm:"column:id_pengirim" json:"id_pengirim"` // Sesuaikan nama kolom di DB
-	CreatedAt        time.Time `json:"created_at"`
+	IdPengirim       string    `gorm:"column:id_pengirim" json:"id_pengirim"`
 	UpdatedAt        time.Time `json:"updated_at"`
 }

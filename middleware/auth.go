@@ -1,13 +1,12 @@
 package middleware
 
 import (
-	"api-web-pemerintah/utils" // Mengimpor package utils, bukan middleware
+	"api-web-pemerintah/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-// AuthMiddleware adalah middleware untuk memeriksa token JWT di header
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -17,7 +16,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Mengambil token dari header Authorization (Bearer token)
 		token := authHeader[len("Bearer "):]
 		if token == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token is required"})
@@ -25,7 +23,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Verifikasi token menggunakan fungsi dari utils
 		claims, err := utils.VerifyJWTToken(token)
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
@@ -33,7 +30,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// Jika token valid, simpan userID di konteks untuk digunakan di route selanjutnya
 		c.Set("userID", claims.ID)
 		c.Set("email", claims.Email)
 
