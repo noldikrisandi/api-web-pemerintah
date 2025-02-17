@@ -1,9 +1,10 @@
 package controllers
 
 import (
-	"backend/database"
-	"backend/models"
+	"api-web-pemerintah/database"
+	"api-web-pemerintah/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +32,32 @@ func GetAspirationByID(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Data aspirasi ditemukan", "data": aspiration})
 }
 
-// Create new aspiration
+// Get aspirations count by user ID for the current week
+// GetAspirationsCountByUserIDThisWeek - Mengambil jumlah aspirasi yang dikirim oleh user dalam minggu ini
+func GetAspirationsCountByUserIDThisWeek(c *gin.Context) {
+	idPengirim := c.Param("id_pengirim") // Ambil id_pengirim dari parameter URL
+
+	// Ambil tanggal saat ini
+	currentTime := time.Now()
+
+	// Hitung awal minggu ini (Senin)
+	startOfWeek := currentTime.AddDate(0, 0, -int(currentTime.Weekday())+1) // Memastikan Senin sebagai awal minggu
+	endOfWeek := startOfWeek.Add(7 * 24 * time.Hour)                        // Akhir minggu (Minggu depan)
+
+	// Hitung jumlah aspirasi yang dikirim oleh user dalam minggu ini
+	var count int64
+	if err := database.DB.Model(&models.Aspirations{}).Where("id_pengirim = ? AND created_at BETWEEN ? AND ?", idPengirim, startOfWeek, endOfWeek).Count(&count).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menghitung jumlah aspirasi", "details": err.Error()})
+		return
+	}
+
+	// Mengembalikan response dengan jumlah aspirasi
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Jumlah aspirasi dalam minggu ini berhasil diambil",
+		"count":   count,
+	})
+}
+
 func CreateAspiration(c *gin.Context) {
 	var aspiration models.Aspirations
 
@@ -41,17 +67,73 @@ func CreateAspiration(c *gin.Context) {
 		return
 	}
 
-	// Simpan ke database
+	// Ambil ID user (id_pengirim) dari input JSON
+	idPengirim := aspiration.IdPengirim
+
+	// Pastikan id_pengirim ada
+	if idPengirim == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID Pengirim tidak boleh kosong"})
+		return
+	}
+
+	// Simpan aspirasi baru ke database
 	if err := database.DB.Create(&aspiration).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan aspirasi", "details": err.Error()})
 		return
 	}
 
+	// Mengembalikan response dengan status Created dan data aspirasi yang baru
 	c.JSON(http.StatusCreated, gin.H{"message": "Aspirasi berhasil ditambahkan", "data": aspiration})
 }
 
+// CreateAspiration2 untuk menambahkan aspirasi baru dengan pembatasan 2 aspirasi per minggu
+func CreateAspiration2(c *gin.Context) {
+	var aspiration models.Aspirations
+
+	// Validasi input JSON
+	if err := c.ShouldBindJSON(&aspiration); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Format data tidak valid", "details": err.Error()})
+		return
+	}
+
+	// Ambil ID user (id_pengirim) dari input JSON
+	idPengirim := aspiration.IdPengirim
+
+	// Pastikan id_pengirim ada
+	if idPengirim == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "ID Pengirim tidak boleh kosong"})
+		return
+	}
+
+	// Tentukan rentang waktu 7 hari terakhir
+	sevenDaysAgo := time.Now().AddDate(0, 0, -7)
+
+	// Hitung jumlah aspirasi yang sudah dikirim oleh user dalam 7 hari terakhir
+	var count int64
+	if err := database.DB.Model(&models.Aspirations{}).
+		Where("id_pengirim = ? AND created_at >= ?", idPengirim, sevenDaysAgo).
+		Count(&count).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menghitung aspirasi", "details": err.Error()})
+		return
+	}
+
+	// Cek apakah jumlah aspirasi lebih dari 2
+	if count >= 2 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Anda sudah mengirimkan 2 aspirasi dalam 7 hari terakhir"})
+		return
+	}
+
+	// Simpan aspirasi baru ke database
+	if err := database.DB.Create(&aspiration).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan aspirasi", "details": err.Error()})
+		return
+	}
+
+	// Mengembalikan response dengan status Created dan data aspirasi yang baru
+	c.JSON(http.StatusCreated, gin.H{"message": "Aspirasi berhasil ditambahkan", "data": aspiration, "total_aspirations_last_week": count})
+}
+
 // Update aspiration by ID
-// Update all fields of the aspiration by ID
 func UpdateAspiration(c *gin.Context) {
 	id := c.Param("id") // Ambil ID sebagai string
 
@@ -107,5 +189,12 @@ func GetAspirationsByUserID(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Data aspirasi pengguna ditemukan", "data": aspirations})
+	// Hitung jumlah aspirasi yang dikirim oleh user
+	aspirationCount := len(aspirations)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message":         "Data aspirasi pengguna ditemukan",
+		"data":            aspirations,
+		"aspirationCount": aspirationCount, // Menampilkan jumlah aspirasi
+	})
 }

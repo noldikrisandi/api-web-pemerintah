@@ -1,8 +1,8 @@
 package main
 
 import (
-	"backend/database"
-	"backend/routes"
+	"api-web-pemerintah/database"
+	"api-web-pemerintah/routes"
 	"fmt"
 	"log"
 	"os"

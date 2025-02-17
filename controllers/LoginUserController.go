@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"backend/database"
-	"backend/models"
-	"backend/utils"
+	"api-web-pemerintah/database"
+	"api-web-pemerintah/models"
+	"api-web-pemerintah/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

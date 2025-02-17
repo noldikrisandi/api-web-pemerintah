@@ -1,7 +1,7 @@
 package database
 
 import (
-	"backend/models"
+	"api-web-pemerintah/models"
 	"fmt"
 	"log"
 

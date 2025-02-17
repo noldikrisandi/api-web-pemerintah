@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"backend/controllers"
+	"api-web-pemerintah/controllers"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -46,17 +46,24 @@ func SetupRouter() *gin.Engine {
 		adminRoutes.POST("", controllers.CreateAdmins)
 		adminRoutes.PUT("/:id", controllers.UpdateAdmins)
 		adminRoutes.DELETE("/:id", controllers.DeleteAdmins)
+		adminRoutes.POST("/login", controllers.LoginAdminController)
 	}
 
 	// Routes untuk Aspirations
 	aspirationRoutes := r.Group("/aspirations")
 	{
+
+		// aspirationRoutes.POST("", controllers.CreateAspiration)
+		aspirationRoutes.POST("", controllers.CreateAspiration2)
 		aspirationRoutes.GET("", controllers.GetAllAspirations)
 		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
-		aspirationRoutes.GET("/user/:user_id", controllers.GetAspirationsByUserID) // Tambahkan ini
-		aspirationRoutes.POST("", controllers.CreateAspiration)
+		aspirationRoutes.GET("/user/:user_id", controllers.GetAspirationsByUserID)
+		// aspirationRoutes.GET("/count/:id_pengirim", controllers.GetAspirationsCountByUserID)
 		aspirationRoutes.PUT("/:id", controllers.UpdateAspiration)
 		aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration)
+		// aspirationRoutes.GET("/user/:user_id/week", controllers.GetAspirationsCountByUserIDLast7Days)
+		// aspirationRoutes.GET("/user/:user_id/week", controllers.CreateAspiration2)
+
 	}
 
 	return r
