@@ -23,7 +23,6 @@ func SetupRouter() *gin.Engine {
 
 	r.POST("/register", controllers.RegisterUser)
 
-	// Routes untuk Users
 	userRoutes := r.Group("/users")
 	{
 		userRoutes.GET("", controllers.GetAllUsers)
@@ -33,7 +32,6 @@ func SetupRouter() *gin.Engine {
 		// userRoutes.DELETE("/:id", controllers.DeleteUsers) saya tidak beri akses hapus
 	}
 
-	// Routes untuk Admin
 	adminRoutes := r.Group("/admins")
 	{
 		adminRoutes.GET("", controllers.GetAllAdmins)
@@ -42,9 +40,9 @@ func SetupRouter() *gin.Engine {
 		adminRoutes.PUT("/:id", controllers.UpdateAdmins)
 		// adminRoutes.DELETE("/:id", controllers.DeleteAdmins) saya tidak beri akses hapus
 		adminRoutes.POST("/login", controllers.LoginAdminController)
+		adminRoutes.POST("/register", controllers.RegisterAdminController)
 	}
 
-	// Routes untuk Aspirations
 	aspirationRoutes := r.Group("/aspirations")
 	{
 
@@ -53,7 +51,17 @@ func SetupRouter() *gin.Engine {
 		aspirationRoutes.GET("/:id", controllers.GetAspirationByID)
 		aspirationRoutes.GET("/user/:user_id", controllers.GetAspirationsByUserID)
 		aspirationRoutes.PUT("/:id", controllers.UpdateAspiration)
-		// aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration) saya tidak beri akses hapus
+		aspirationRoutes.GET("/count/:id_pengirim", controllers.GetAspirationsCountByUserID)
+		aspirationRoutes.DELETE("/:id", controllers.DeleteAspiration)
+
+	}
+
+	admincontrollerRoutes := r.Group("/admincontrollers")
+	{
+		admincontrollerRoutes.POST("", controllers.CreateAdminController)
+		admincontrollerRoutes.GET("", controllers.GetAdminControllers)
+		admincontrollerRoutes.POST("/distribute", controllers.DistributeAspirasi1)
+		admincontrollerRoutes.DELETE("/:id", controllers.DeleteAdminController)
 
 	}
 

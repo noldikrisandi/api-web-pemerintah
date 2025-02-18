@@ -19,7 +19,7 @@ var secretKey = []byte(os.Getenv("JWT_SECRET"))
 func VerifyJWTToken(tokenString string) (*Claims, error) {
 	claims := &Claims{}
 
-	// Verifikasi token JWT
+	// verifikasi token JWT
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

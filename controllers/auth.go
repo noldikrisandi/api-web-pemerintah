@@ -55,7 +55,7 @@ func LoginHandler(c *gin.Context) {
 	claims := jwt.MapClaims{
 		"id":    admin.ID,
 		"email": admin.Email,
-		"exp":   time.Now().Add(24 * time.Hour).Unix(), // Token berlaku 24 jam
+		"exp":   time.Now().Add(24 * time.Hour).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

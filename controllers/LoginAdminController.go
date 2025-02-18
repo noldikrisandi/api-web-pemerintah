@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func LoginAdminController(c *gin.Context) {
@@ -38,4 +39,38 @@ func LoginAdminController(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+func RegisterAdminController(c *gin.Context) {
+	var adminReq struct {
+		ID       string `json:"id" binding:"required"`
+		Email    string `json:"email" binding:"required"`
+		Password string `json:"password" binding:"required"`
+		Answer   string `json:"answer" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&adminReq); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Format request salah"})
+		return
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(adminReq.Password), bcrypt.DefaultCost)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengenkripsi password"})
+		return
+	}
+
+	newAdmin := models.Admins{
+		ID:       adminReq.ID,
+		Email:    adminReq.Email,
+		Password: string(hashedPassword),
+		Answer:   adminReq.Answer,
+	}
+
+	if err := database.DB.Create(&newAdmin).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menyimpan admin"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Admin berhasil didaftarkan", "id": newAdmin.ID})
 }

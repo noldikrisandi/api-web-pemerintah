@@ -13,5 +13,6 @@ type Aspirations struct {
 	Status           string    `json:"status"`
 	KeteranganStatus string    `json:"keterangan_status"`
 	IdPengirim       string    `gorm:"column:id_pengirim" json:"id_pengirim"`
+	CreatedAt        time.Time `gorm:"column:created_at;autoCreateTime" json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`
 }
