@@ -13,7 +13,7 @@ func SetupRouter() *gin.Engine {
 	r.Use(gin.Logger(), gin.Recovery())
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "https://noldikrisandi.github.io"}, // untuk ases frontend
+		AllowOrigins:     []string{"http://localhost:5173", "https://noldikrisandi.github.io", "https://donggala-app.netlify.app"}, // untuk ases frontend
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
